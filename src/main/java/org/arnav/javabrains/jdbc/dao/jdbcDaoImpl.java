@@ -1,68 +1,57 @@
 package org.arnav.javabrains.jdbc.dao;
-import java.sql.Connection;
 //import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.arnav.javabrains.jdbc.model.bwTxnsModel;
+import org.arnav.javabrains.jdbc.rowmapper.BwTxnsMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 public class jdbcDaoImpl {
 	
-	@Autowired
-	private DataSource dataSource;
 	
-//	private static final String URL   = "jdbc:mysql://localhost:3306/deepu";
-//	private static final String USER  = "root";
-//	private static final String PASS  = "password";
+	private DataSource dataSource;
+	private JdbcTemplate jdbcTemplate = new JdbcTemplate();
+	
+	public int getTxnCount()	{
+		String sql = "select count(*) from bw_txn";
+//		jdbcTemplate.setDataSource(getDataSource());
+		int count = jdbcTemplate.queryForObject(sql, Integer.class);
+		return count;
+	}
 	
 	public bwTxnsModel getTxn(int txnId)	{
-    		
-    		try	
-    			(
-//    				Connection conn = DriverManager.getConnection(URL, USER, PASS);
-    				Connection conn = dataSource.getConnection();
-    				Statement stmt = conn.createStatement();
-    				ResultSet rs = stmt.executeQuery("SELECT * FROM bw_txn where bw_txn_id = " + txnId + ";");
-    			)
-    		{
-//                System.out.println("Connected to: " + dataSource.get);
-     			bwTxnsModel bwTxnsInstance = null;
-     			while (rs.next()) {
-     				bwTxnsInstance = new bwTxnsModel(
-     						  rs.getInt("bw_txn_id")
-     						, rs.getString("BSB_Number")
-     						, rs.getInt("Account_Number")
-     						, rs.getString("Transaction_Date")
-     						, rs.getString("Narration")
-     						, rs.getString("Cheque_Number")
-     						, rs.getDouble("Debit")
-     						, rs.getDouble("Credit")
-     						, rs.getDouble("Balance")
-     						, rs.getString("Transaction_Type")
-     						);
-     			}
-     			return bwTxnsInstance;
-            } 
-    		catch (SQLException e) {
-                System.out.println("SQLException: "+ e.getMessage());
-                System.out.println("SQLState: "+ e.getSQLState());
-                System.out.println("VendorError: "+ e.getErrorCode());
-                return null;
-            }
+		String sql = "select * from bw_txn where bw_txn_id = ?";
+		return jdbcTemplate.queryForObject(sql, new Object[] {txnId}, new BwTxnsMapper());
+	}
+	
+	public List<bwTxnsModel> getTxnList()	{
+		String sql = "select * from bw_txn";
+		return jdbcTemplate.query(sql, new BwTxnsMapper());
 	}
 	
 	public DataSource getDataSource() {
 		return dataSource;
 	}
 
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
+//		this.dataSource = dataSource;
+		this.jdbcTemplate = new JdbcTemplate(dataSource);
+	}
+	
+	public JdbcTemplate getJdbcTemplate() {
+		return jdbcTemplate;
+	}
+
+	public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 	
 }

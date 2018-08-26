@@ -5,5 +5,6 @@
 	<classpathentry excluding="main/java/" kind="src" path="src"/>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="lib" path="E:/Skills Upliftment 29-05-2018/MySQL - Oracle - Laptop HP/mysql-connector-java-8.0.12/mysql-connector-java-8.0.12.jar"/>
+	<classpathentry kind="lib" path="E:/Skills Upliftment 29-05-2018/Learning/Java/Spring Framework - Distributions/Jaxon - Object to Json jars/jackson-core-2.0.0-rc1.jar/jackson-core-2.0.0-rc1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

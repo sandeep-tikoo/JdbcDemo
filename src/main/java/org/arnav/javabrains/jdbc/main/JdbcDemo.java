@@ -12,9 +12,16 @@ public class JdbcDemo {
 		ApplicationContext ctx = new ClassPathXmlApplicationContext("spring.xml");
 		jdbcDaoImpl dao = ctx.getBean("jdbcDaoImpl", jdbcDaoImpl.class);
 		
-		bwTxnsModel newTxn = dao.getTxn(2);
-		System.out.println(newTxn.getTxnId() + " <:> " + newTxn.getBalance());
+		//Get row count
+		System.out.println("Count from getTxnCount method: " + dao.getTxnCount());
+		
+		//Get row by ID
+		bwTxnsModel newTxn1 = dao.getTxn(2);
+		System.out.println("An instance for get ID method: " + newTxn1.getTxnId() + " <:> " + newTxn1.getBalance());
 
+		System.out.println("Size from get list method array: " + dao.getTxnList().size());
+
+		
 	}
 
 }
